@@ -1,0 +1,61 @@
+version: "3.8"
+services:
+  keycloak:
+    image: keycloak/keycloak:23.0.7
+    env_file:
+      - ./config/global.env
+    command: [ "--verbose", "start-dev" ]
+    environment:
+      DEBUG: "true"
+      DEBUG_PORT: "*:8787"
+      KC_LOG_LEVEL: info,org.vaulttec:DEBUG
+    ports:
+      - "8080:8080"
+      - "8787:8787"
+    volumes:
+      - ./target/confluence-ldap-group-mapper.jar:/opt/keycloak/providers/confluence-ldap-group-mapper.jar:z
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - openldap
+      - mockserver
+
+  keycloak-provisioning:
+    image: adorsys/keycloak-config-cli:5.10.0-23.0.1
+    env_file:
+      - ./config/global.env
+    volumes:
+      - ./config/realms/:/config/:z
+    depends_on:
+      - keycloak
+
+  openldap:
+    image: osixia/openldap:1.5.0
+    env_file:
+      - ./config/global.env
+    command: [ "--copy-service", "--loglevel", "warning" ]
+    ports:
+      - "1389:389"
+      - "1636:636"
+    volumes:
+        - ./config/ldap/acme.ldif:/tmp/ldif/acme.ldif:z
+
+  phpldapadmin:
+    image: osixia/phpldapadmin:latest
+    environment:
+      PHPLDAPADMIN_LDAP_HOSTS: "openldap"
+      PHPLDAPADMIN_HTTPS: "false"
+    command: [ "--loglevel", "warning" ]
+    ports:
+      - "17080:80"
+    depends_on:
+      - openldap
+
+  mockserver:
+    image: mockserver/mockserver:5.15.0
+    env_file:
+      - ./config/global.env
+    ports:
+      - "1080:1080"
+    volumes:
+      - ./config/mock/:/config/:z

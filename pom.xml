@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.vaulttec.keycloak</groupId>
+    <artifactId>confluence-ldap-group-mapper</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <name>Keycloak Confluence LDAP Group Mapper</name>
+    <description>Custom Keycloak LDAP Group Mapper which creates groups and group memberships from Confluence pages and page properties</description>
+    <inceptionYear>2024</inceptionYear>
+    <url>https://github.com/vaulttec/keycloak-confluence-ldap-group-mapper</url>
+
+    <licenses>
+        <license>
+            <name>APACHE 2</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.release>17</maven.compiler.release>
+        <maven-compiler.version>3.12.1</maven-compiler.version>
+        <maven-shade.version>3.2.4</maven-shade.version>
+        <maven-surefire.version>3.2.5</maven-surefire.version>
+        <maven-failsafe.version>3.2.5</maven-failsafe.version>
+        <keycloak.version>24.0.1</keycloak.version>
+        <jsoup.version>1.17.2</jsoup.version>
+        <junit.version>5.10.2</junit.version>
+
+        <mockito.version>5.11.0</mockito.version>
+        <mock-server.version>5.15.0</mock-server.version>
+        <slf4j.version>2.0.12</slf4j.version>
+        <logback.version>1.5.3</logback.version>
+        <testcontainers.version>1.19.7</testcontainers.version>
+        <testcontainers-keycloak.version>3.3.0</testcontainers-keycloak.version>
+        <rest-assured.version>5.4.0</rest-assured.version>
+        <shrinkwrap-resolver.version>3.3.0</shrinkwrap-resolver.version>
+    </properties>
+
+    <issueManagement>
+        <system>github</system>
+        <url>https://github.com/vaulttec/keycloak-confluence-ldap-group-mapper/issues</url>
+    </issueManagement>
+
+    <ciManagement>
+        <system>github-actions</system>
+        <url>https://github.com/vaulttec/keycloak-confluence-ldap-group-mapper/actions</url>
+    </ciManagement>
+
+    <scm>
+        <connection>scm:git:https://github.com/vaulttec/keycloak-confluence-ldap-group-mapper.git</connection>
+        <developerConnection>scm:git:git@github.com:vaulttec/keycloak-confluence-ldap-group-mapper.git</developerConnection>
+        <url>https://github.com/vaulttec/keycloak-confluence-ldap-group-mapper</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <developers>
+        <developer>
+            <id>tjuerge</id>
+            <name>Torsten Juergeleit</name>
+            <organization>Vaulttec</organization>
+        </developer>
+    </developers>
+
+    <organization>
+        <name>Vaulttec</name>
+        <url>http://vaulttec.org</url>
+    </organization>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.keycloak</groupId>
+            <artifactId>keycloak-ldap-federation</artifactId>
+            <version>${keycloak.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>${jsoup.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${testcontainers.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.dasniko</groupId>
+            <artifactId>testcontainers-keycloak</artifactId>
+            <version>${testcontainers-keycloak.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mock-server</groupId>
+            <artifactId>mockserver-netty</artifactId>
+            <version>${mock-server.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mock-server</groupId>
+            <artifactId>mockserver-junit-jupiter</artifactId>
+            <version>${mock-server.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mock-server</groupId>
+            <artifactId>mockserver-client-java</artifactId>
+            <version>${mock-server.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <version>${rest-assured.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>log4j-over-slf4j</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.shrinkwrap.resolver</groupId>
+            <artifactId>shrinkwrap-resolver-impl-maven-archive</artifactId>
+            <version>${shrinkwrap-resolver.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven-compiler.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven-surefire.version}</version>
+                    <configuration>
+                        <!-- Needed for Mockito -->
+                        <argLine>-XX:+EnableDynamicAgentLoading</argLine>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>${maven-failsafe.version}</version>
+                    <configuration>
+                        <!-- Needed for Mockito -->
+                        <argLine>-XX:+EnableDynamicAgentLoading</argLine>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>integration-test</goal>
+                                <goal>verify</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <version>${maven-shade.version}</version>
+                    <configuration>
+                        <artifactSet>
+                            <excludes>
+                                <exclude>org.keycloak*</exclude>
+                            </excludes>
+                        </artifactSet>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>shade</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+        <finalName>${project.artifactId}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
