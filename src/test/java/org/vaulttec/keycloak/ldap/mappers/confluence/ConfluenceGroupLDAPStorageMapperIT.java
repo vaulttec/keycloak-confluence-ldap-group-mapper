@@ -13,6 +13,7 @@ import org.keycloak.representations.idm.UserRepresentation;
 
 import java.util.List;
 
+import static dasniko.testcontainers.keycloak.ExtendableKeycloakContainer.MASTER_REALM;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -34,7 +35,7 @@ public class ConfluenceGroupLDAPStorageMapperIT {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { KeycloakContainer.MASTER_REALM, REALM})
+    @ValueSource(strings = {MASTER_REALM, REALM})
     public void testRealms(String realm) {
         String accountServiceUrl = given().when().get(KEYCLOAK_ENVIRONMENT.getAuthServerUrl() + "/realms/" + realm)
                 .then().statusCode(200).body("realm", equalTo(realm))
@@ -44,7 +45,7 @@ public class ConfluenceGroupLDAPStorageMapperIT {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "dooj1:johndoo", "dooj2:janedoo", "dooj3:jimdoo"})
+    @ValueSource(strings = {"dooj1:johndoo", "dooj2:janedoo", "dooj3:jimdoo"})
     public void testAccessingUsersAsAdmin(String usernameAndMailname) {
         String[] splittedParameter = usernameAndMailname.split(":");
         Keycloak kcAdmin = KEYCLOAK_ENVIRONMENT.getAdminClient();

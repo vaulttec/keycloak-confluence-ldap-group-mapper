@@ -21,6 +21,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
+import static org.testcontainers.containers.BindMode.READ_ONLY;
+
 public class KeycloakEnvironment {
     private static final Logger LOG = LoggerFactory.getLogger(KeycloakEnvironment.class);
     public static final String GLOBAL_ENV_PATH = "config/global.env";
@@ -148,7 +150,7 @@ public class KeycloakEnvironment {
         return new GenericContainer<>(KEYCLOAK_CONFIG_CLI_IMAGE)
                 .withNetworkAliases("keycloak-provisioning")
                 .withEnv(readEnvFile(GLOBAL_ENV_PATH))
-                .withFileSystemBind("config/realms", "/config", BindMode.READ_ONLY)
+                .withFileSystemBind("config/realms", "/config", READ_ONLY)
                 .waitingFor(Wait.forLogMessage(".*keycloak-config-cli running in.*", 1));
     }
 
@@ -156,15 +158,15 @@ public class KeycloakEnvironment {
         return new GenericContainer<>(OPENLDAP_IMAGE)
                 .withNetworkAliases("openldap")
                 .withEnv(readEnvFile(GLOBAL_ENV_PATH))
-                .withFileSystemBind("./config/ldap/acme.ldif", "/tmp/ldif/acme.ldif", BindMode.READ_ONLY)
-                .withCommand( "--copy-service --loglevel warning");
+                .withFileSystemBind("./config/ldap/acme.ldif", "/tmp/ldif/acme.ldif", READ_ONLY)
+                .withCommand("--copy-service --loglevel warning");
     }
 
     public static GenericContainer<?> createMockServerContainer() {
         return new GenericContainer<>(MOCK_SERVER_IMAGE)
                 .withNetworkAliases("mockserver")
                 .withEnv(readEnvFile(GLOBAL_ENV_PATH))
-                .withFileSystemBind("./config/mock", "/config", BindMode.READ_ONLY)
+                .withFileSystemBind("./config/mock", "/config", READ_ONLY)
                 .withExposedPorts(1080);
     }
 

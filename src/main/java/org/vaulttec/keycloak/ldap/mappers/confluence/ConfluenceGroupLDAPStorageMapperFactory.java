@@ -11,18 +11,21 @@ import org.keycloak.provider.ProviderConfigurationBuilder;
 import org.keycloak.storage.ldap.LDAPStorageProvider;
 import org.keycloak.storage.ldap.mappers.AbstractLDAPStorageMapperFactory;
 import org.keycloak.storage.ldap.mappers.membership.group.GroupMapperConfig;
+import org.vaulttec.keycloak.ldap.mappers.confluence.content.ConfluenceContentCache;
 import org.vaulttec.keycloak.ldap.mappers.confluence.content.ConfluenceContentConfig;
 import org.vaulttec.keycloak.ldap.mappers.confluence.content.ConfluenceContentProvider;
-import org.vaulttec.keycloak.ldap.mappers.confluence.content.ContentCache;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
+
+import static org.vaulttec.keycloak.ldap.mappers.confluence.ConfluenceGroupMapperConfig.*;
+import static org.vaulttec.keycloak.ldap.mappers.confluence.content.ConfluenceContentConfig.*;
 
 public class ConfluenceGroupLDAPStorageMapperFactory extends AbstractLDAPStorageMapperFactory {
     private static final Logger LOG = Logger.getLogger(ConfluenceGroupLDAPStorageMapperFactory.class);
     public static final String PROVIDER_ID = "confluence-group-ldap-mapper";
     private ConfluenceContentProvider contentProvider;
-    private final AtomicReference<ContentCache> contentCache = new AtomicReference<>();
+    private final AtomicReference<ConfluenceContentCache> contentCache = new AtomicReference<>();
 
     @Override
     public String getId() {
@@ -43,36 +46,36 @@ public class ConfluenceGroupLDAPStorageMapperFactory extends AbstractLDAPStorage
     @Override
     public List<ProviderConfigProperty> getConfigProperties() {
         return ProviderConfigurationBuilder.create()
-                .property().name(ConfluenceContentConfig.BASE_URL).label("Base URL").helpText("Base URL of the Confluence Server (with context path - if any)").type(ProviderConfigProperty.STRING_TYPE).required(true).add()
-                .property().name(ConfluenceContentConfig.AUTH_TOKEN).label("Bearer Token").helpText("Personal access token for API authentication").type(ProviderConfigProperty.PASSWORD).secret(true).required(true).add()
-                .property().name(ConfluenceContentConfig.PARENT_PAGE_ID).label("Parent Page ID").helpText("ID of parent page the child pages are retrieved from").type(ProviderConfigProperty.STRING_TYPE).required(true).add()
-                .property().name(ConfluenceContentConfig.PAGE_NESTING).label("Page Nesting Depth").helpText("Max depth of nested child pages").type(ProviderConfigProperty.STRING_TYPE).defaultValue(ConfluenceContentConfig.DEFAULT_PAGE_NESTING).required(true).add()
-                .property().name(ConfluenceContentConfig.SPACE_KEY).label("Space Key").helpText("Key of Confluence space the pages are belonging to").type(ProviderConfigProperty.STRING_TYPE).required(true).add()
-                .property().name(ConfluenceContentConfig.PAGE_LABELS).label("Page Label(s)").helpText("Comma-separated list of labels required for the pages").type(ProviderConfigProperty.STRING_TYPE).add()
-                .property().name(ConfluenceContentConfig.PAGE_PROPERTY_NAME).label("Page Property Name").helpText("Name of page property with the table holding the group members ").type(ProviderConfigProperty.STRING_TYPE).required(true).add()
-                .property().name(ConfluenceContentConfig.MEMBER_COLUMN_INDEX).label("Member Column Index").helpText("Index of table column with group members").type(ProviderConfigProperty.STRING_TYPE).defaultValue("1").required(true).add()
-                .property().name(ConfluenceGroupMapperConfig.DROP_NON_EXISTING_GROUPS_DURING_SYNC).label("Drop non-existing Groups").helpText("During sync of groups from Confluence to Keycloak, we will keep just those Keycloak groups, which still exists in Confluence. Rest will be deleted.").type(ProviderConfigProperty.BOOLEAN_TYPE).defaultValue(true).add()
-                .property().name(ConfluenceGroupMapperConfig.GROUPS_PATH).label("Groups Path").helpText("Keycloak group path the Confluence groups are added to").type(ProviderConfigProperty.STRING_TYPE).defaultValue(ConfluenceGroupMapperConfig.DEFAULT_GROUPS_PATH).required(true).add()
+                .property().name(BASE_URL).label("Base URL").helpText("Base URL of the Confluence Server (with context path - if any)").type(ProviderConfigProperty.STRING_TYPE).required(true).add()
+                .property().name(AUTH_TOKEN).label("Bearer Token").helpText("Personal access token for API authentication").type(ProviderConfigProperty.PASSWORD).secret(true).required(true).add()
+                .property().name(PARENT_PAGE_ID).label("Parent Page ID").helpText("ID of parent page the child pages are retrieved from").type(ProviderConfigProperty.STRING_TYPE).required(true).add()
+                .property().name(PAGE_NESTING).label("Page Nesting Depth").helpText("Max depth of nested child pages").type(ProviderConfigProperty.STRING_TYPE).defaultValue(ConfluenceContentConfig.DEFAULT_PAGE_NESTING).required(true).add()
+                .property().name(SPACE_KEY).label("Space Key").helpText("Key of Confluence space the pages are belonging to").type(ProviderConfigProperty.STRING_TYPE).required(true).add()
+                .property().name(PAGE_LABELS).label("Page Label(s)").helpText("Comma-separated list of labels required for the pages").type(ProviderConfigProperty.STRING_TYPE).add()
+                .property().name(PAGE_PROPERTY_NAME).label("Page Property Name").helpText("Name of page property with the table holding the group members ").type(ProviderConfigProperty.STRING_TYPE).required(true).add()
+                .property().name(MEMBER_COLUMN_INDEX).label("Member Column Index").helpText("Index of table column with group members").type(ProviderConfigProperty.STRING_TYPE).defaultValue("1").required(true).add()
+                .property().name(DROP_NON_EXISTING_GROUPS_DURING_SYNC).label("Drop non-existing Groups").helpText("During sync of groups from Confluence to Keycloak, we will keep just those Keycloak groups, which still exists in Confluence. Rest will be deleted.").type(ProviderConfigProperty.BOOLEAN_TYPE).defaultValue(true).add()
+                .property().name(GROUPS_PATH).label("Groups Path").helpText("Keycloak group path the Confluence groups are added to").type(ProviderConfigProperty.STRING_TYPE).defaultValue(DEFAULT_GROUPS_PATH).required(true).add()
                 .build();
     }
 
     @Override
     public void validateConfiguration(KeycloakSession session, RealmModel realm, ComponentModel config) throws ComponentValidationException {
-        checkMandatoryConfigAttribute(ConfluenceContentConfig.BASE_URL, "Base URL", config);
-        checkMandatoryConfigAttribute(ConfluenceContentConfig.AUTH_TOKEN, "Bearer Token", config);
-        checkMandatoryConfigAttribute(ConfluenceContentConfig.PARENT_PAGE_ID, "Parent Page ID", config);
-        checkMandatoryConfigAttribute(ConfluenceContentConfig.PAGE_NESTING, "Page Nesting Depth", config);
-        checkMandatoryConfigAttribute(ConfluenceContentConfig.SPACE_KEY, "Space Key", config);
-        checkMandatoryConfigAttribute(ConfluenceContentConfig.PAGE_PROPERTY_NAME, "Page Property Name", config);
-        checkMandatoryConfigAttribute(ConfluenceContentConfig.MEMBER_COLUMN_INDEX, "Member Column Index", config);
-        checkMandatoryConfigAttribute(ConfluenceGroupMapperConfig.GROUPS_PATH, "Groups Path", config);
+        checkMandatoryConfigAttribute(BASE_URL, "Base URL", config);
+        checkMandatoryConfigAttribute(AUTH_TOKEN, "Bearer Token", config);
+        checkMandatoryConfigAttribute(PARENT_PAGE_ID, "Parent Page ID", config);
+        checkMandatoryConfigAttribute(PAGE_NESTING, "Page Nesting Depth", config);
+        checkMandatoryConfigAttribute(SPACE_KEY, "Space Key", config);
+        checkMandatoryConfigAttribute(PAGE_PROPERTY_NAME, "Page Property Name", config);
+        checkMandatoryConfigAttribute(MEMBER_COLUMN_INDEX, "Member Column Index", config);
+        checkMandatoryConfigAttribute(GROUPS_PATH, "Groups Path", config);
 
         String baseUrl = new ConfluenceContentConfig(config).getBaseUrl();
         if (baseUrl.trim().endsWith("/")) {
             throw new ComponentValidationException("No trailing slash in Base URL allowed");
         }
         String groupsPath = new GroupMapperConfig(config).getGroupsPath();
-        if (!ConfluenceGroupMapperConfig.DEFAULT_GROUPS_PATH.equals(groupsPath) && KeycloakModelUtils.findGroupByPath(session, realm, groupsPath) == null) {
+        if (!DEFAULT_GROUPS_PATH.equals(groupsPath) && KeycloakModelUtils.findGroupByPath(session, realm, groupsPath) == null) {
             throw new ComponentValidationException("ldapErrorMissingGroupsPathGroup");
         }
     }
@@ -82,10 +85,10 @@ public class ConfluenceGroupLDAPStorageMapperFactory extends AbstractLDAPStorage
         return new ConfluenceGroupLDAPStorageMapper(model, provider, this);
     }
 
-    /* package */ ContentCache getContentCache(boolean refresh) {
+    /* package */ ConfluenceContentCache getContentCache(boolean refresh) {
         if (refresh) {
             LOG.debug("Refreshing content cache");
-            contentCache.set(ContentCache.of(contentProvider));
+            contentCache.set(ConfluenceContentCache.of(contentProvider));
         }
         return contentCache.get();
     }

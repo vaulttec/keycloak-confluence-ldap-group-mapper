@@ -13,10 +13,10 @@ import org.keycloak.storage.ldap.idm.model.LDAPObject;
 import org.keycloak.storage.ldap.idm.query.internal.LDAPQuery;
 import org.keycloak.storage.ldap.mappers.AbstractLDAPStorageMapper;
 import org.keycloak.storage.user.SynchronizationResult;
+import org.vaulttec.keycloak.ldap.mappers.confluence.content.ConfluenceContentCache;
 import org.vaulttec.keycloak.ldap.mappers.confluence.content.ConfluenceContentConfig;
 import org.vaulttec.keycloak.ldap.mappers.confluence.content.ConfluencePage;
 import org.vaulttec.keycloak.ldap.mappers.confluence.content.ConfluencePageProperty;
-import org.vaulttec.keycloak.ldap.mappers.confluence.content.ContentCache;
 
 import java.util.*;
 import java.util.function.Function;
@@ -49,13 +49,13 @@ public class ConfluenceGroupLDAPStorageMapper extends AbstractLDAPStorageMapper 
 
         };
         LOG.debugf("Importing groups from Confluence into Keycloak DB. Mapper is [%s], LDAP provider is [%s]", mapperModel.getName(), ldapProvider.getModel().getName());
-        ContentCache contentCache = factory.getContentCache(true);
+        ConfluenceContentCache contentCache = factory.getContentCache(true);
         updateKeycloakGroups(realm, contentCache, syncResult);
         syncFromConfluencePerformedInThisTransaction = true;
         return syncResult;
     }
 
-    private void updateKeycloakGroups(RealmModel realm, ContentCache contentCache, SynchronizationResult syncResult) {
+    private void updateKeycloakGroups(RealmModel realm, ConfluenceContentCache contentCache, SynchronizationResult syncResult) {
         Set<String> visitedGroupIds = new HashSet<>();
         for (ConfluencePage page : contentCache.pages()) {
             updateKeycloakGroup(realm, page, null, syncResult, visitedGroupIds);
@@ -155,7 +155,7 @@ public class ConfluenceGroupLDAPStorageMapper extends AbstractLDAPStorageMapper 
 
     private List<ConfluencePage> getMappedPages(String firstName, String lastName) {
         List<ConfluencePage> mappingPages = new ArrayList<>();
-        ContentCache contentCache = factory.getContentCache(false);
+        ConfluenceContentCache contentCache = factory.getContentCache(false);
         List<ConfluencePageProperty> userPageProperties = contentCache.pageProperties().stream()
                 .filter(p -> p.getValues().stream()
                         .map(normalizeUsername())
