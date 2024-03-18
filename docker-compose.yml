@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   keycloak:
-    image: keycloak/keycloak:23.0.7
+    image: quay.io/keycloak/keycloak:24.0.1
     env_file:
       - ./config/global.env
     command: [ "--verbose", "start-dev" ]
@@ -21,7 +21,7 @@ services:
       - mockserver
 
   keycloak-provisioning:
-    image: adorsys/keycloak-config-cli:5.10.0-23.0.1
+    image: quay.io/adorsys/keycloak-config-cli:5.11.1-24.0.1
     env_file:
       - ./config/global.env
     volumes:

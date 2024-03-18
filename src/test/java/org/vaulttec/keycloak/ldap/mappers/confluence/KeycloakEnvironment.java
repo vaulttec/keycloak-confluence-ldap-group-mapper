@@ -5,7 +5,6 @@ import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.keycloak.admin.client.Keycloak;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testcontainers.containers.BindMode;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.Network;
 import org.testcontainers.containers.output.Slf4jLogConsumer;
@@ -25,8 +24,8 @@ import java.util.stream.Collectors;
 public class KeycloakEnvironment {
     private static final Logger LOG = LoggerFactory.getLogger(KeycloakEnvironment.class);
     public static final String GLOBAL_ENV_PATH = "config/global.env";
-    public static final String KEYCLOAK_IMAGE = "keycloak/keycloak:23.0.7";
-    public static final String KEYCLOAK_CONFIG_CLI_IMAGE = "adorsys/keycloak-config-cli:5.10.0-23.0.1";
+    public static final String KEYCLOAK_IMAGE = "quay.io/keycloak/keycloak:24.0.1";
+    public static final String KEYCLOAK_CONFIG_CLI_IMAGE = "quay.io/adorsys/keycloak-config-cli:5.11.1-24.0.1";
     public static final String OPENLDAP_IMAGE = "osixia/openldap:1.5.0";
     public static final String MOCK_SERVER_IMAGE = "mockserver/mockserver:5.15.0";
 
