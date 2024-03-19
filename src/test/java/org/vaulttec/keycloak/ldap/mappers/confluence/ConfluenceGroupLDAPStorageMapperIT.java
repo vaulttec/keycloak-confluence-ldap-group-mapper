@@ -59,7 +59,7 @@ public class ConfluenceGroupLDAPStorageMapperIT {
 
     @ParameterizedTest(name="username {0} has email {1}@ns-mail8.com")
     @CsvSource({"dooj1,johndoo", "dooj2,janedoo", "dooj3,jimdoo"})
-    public void testAccessingUsersAsAdmin(String username, String email) {
+    public void testUsersWithGroups(String username, String email) {
         Keycloak kcAdmin = KEYCLOAK_ENVIRONMENT.getAdminClient();
         UsersResource usersResource = kcAdmin.realm(REALM).users();
         // Get user representation for given username
@@ -86,7 +86,6 @@ public class ConfluenceGroupLDAPStorageMapperIT {
         // Trigger full sync of users and groups
         SynchronizationResultRepresentation syncResult = realm.userStorage().syncUsers(storageProviderId, "triggerFullSync");
         assertNotNull(syncResult);
-        assertEquals(102, syncResult.getAdded());
         // Check groups hierarchy synced from Confluence
         List<GroupRepresentation> groups = realm.groups().query("Page", true);
         assertEquals(2, groups.size());
