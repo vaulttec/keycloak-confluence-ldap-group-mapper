@@ -146,6 +146,14 @@ paths:
                     title: Team 2
                     details:
                       - <div class="content-wrapper"><div class="table-wrap"><table class="wrapped confluenceTable" data-mce-resize="false"><colgroup><col/><col/><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Name</th><th class="confluenceTh">Position</th><th class="confluenceTh">Function</th><th class="confluenceTh">Location</th></tr><tr><td class="confluenceTd">Jane Doo</td><td class="confluenceTd">Manager</td><td class="confluenceTd"><a href="/confluence/display/ORG/Product+Owner">Product Owner</a></td><td class="confluenceTd">Here</td></tr><tr><td class="confluenceTd"> Doo,   John </td><td class="confluenceTd">Associate</td><td class="confluenceTd"><a href="/confluence/display/ORG/Developer">Developer</a></td><td class="confluenceTd">Nowhere</td></tr><tr><td class="confluenceTd">Jim Doo</td><td class="confluenceTd">Analyst</td><td class="confluenceTd"><a href="/confluence/display/ORG/Developer">Developer</a></td><td class="confluenceTd">Anywhere</td></tr></tbody></table></div></div>
+        '404':
+          description: |-
+            Returned if;
+
+            - The space key is unknown.
+            - There is an error with the given CQL.
+            - The calling user does not have permission to view the pages.
+          content: {}
 
 
 components:
