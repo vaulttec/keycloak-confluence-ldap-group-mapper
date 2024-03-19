@@ -121,6 +121,7 @@ public class ConfluenceGroupLDAPStorageMapper extends AbstractLDAPStorageMapper 
         };
     }
 
+    @Override
     public void onImportUserFromLDAP(LDAPObject ldapUser, UserModel user, RealmModel realm, boolean isCreate) {
         String firstName = ldapUser.getAttributeAsString("givenName");
         String lastName = ldapUser.getAttributeAsString("sn");
