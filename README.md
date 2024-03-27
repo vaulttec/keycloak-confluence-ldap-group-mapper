@@ -16,6 +16,26 @@ Kudos to Niko and Thomas for their great work!
 There's a `docker-compose.yml` definition to use with Docker Compose. It uses the same configuration as the integration tests.
 
 Build and run all the stuff with:
-```
+```shell
 ./mvnw clean package -DskipTests && docker compose up --force-recreate
 ```
+
+## How to install?
+
+Download a release (*.jar file) that works with your Keycloak version from the [list of releases](https://github.com/vaulttec/keycloak-confluence-ldap-group-mapper/releases).
+Follow the below instructions depending on your distribution and runtime environment.
+
+### Standalone (without container)
+
+Copy the jar to the `providers` folder and execute the following command:
+
+```shell
+${kc.home.dir}/bin/kc.sh build
+```
+
+### Container image (Docker)
+
+For Docker-based setups mount or copy the jar to `/opt/keycloak/providers`.
+
+You may want to check [docker-compose.yml](docker-compose.yml) as an example.
+
