@@ -1,6 +1,6 @@
 # Keycloak Confluence LDAP Group Mapper
 [![CI build](https://github.com/vaulttec/keycloak-confluence-ldap-group-mapper/actions/workflows/ci-build.yml/badge.svg)](hhttps://github.com/vaulttec/keycloak-confluence-ldap-group-mapper/actions/workflows/ci-build.yml)
-![](https://img.shields.io/github/license/vaulttec/keycloak-confluence-ldap-group-mapper?label=License)
+[![Release](https://img.shields.io/github/release/keycloak-confluence-ldap-group-mapper.svg)](https://github.com/vaulttec/keycloak-confluence-ldap-group-mapper/releases/latest)![](https://img.shields.io/github/license/vaulttec/keycloak-confluence-ldap-group-mapper?label=License)
 ![](https://img.shields.io/badge/Keycloak-23.0-blue)
 
 Custom [Keycloak](https://www.keycloak.org) LDAP Group Mapper which creates groups and group memberships retrieved from [Confluence](https://www.atlassian.com/software/confluence) pages (representing the group hierarchy) and page properties (providing a HTML table with a group member column) via [Confluence's REST API](config/mock/confluence-openapi.yaml).
