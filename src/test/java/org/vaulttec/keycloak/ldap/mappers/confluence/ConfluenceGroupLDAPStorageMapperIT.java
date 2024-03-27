@@ -64,7 +64,7 @@ public class ConfluenceGroupLDAPStorageMapperIT {
         UsersResource usersResource = kcAdmin.realm(REALM).users();
         // Get user representation for given username
         List<UserRepresentation> users = usersResource.search(username);
-        assertThat(users, is(not(empty())));
+        assertEquals(1, users.size());
         String userId = users.get(0).getId();
         // Retrieve user details and check user's email address
         UserResource userResource = usersResource.get(userId);
@@ -81,7 +81,7 @@ public class ConfluenceGroupLDAPStorageMapperIT {
         RealmResource realm = kcAdmin.realm(REALM);
         // Retrieve ID of LDAP user federation provider
         List<ComponentRepresentation> storageProviders = realm.components().query(realm.toRepresentation().getId(), UserStorageProvider.class.getName());
-        assertThat(storageProviders, is(not(empty())));
+        assertEquals(1, storageProviders.size());
         String storageProviderId = storageProviders.get(0).getId();
         // Trigger full sync of users and groups
         SynchronizationResultRepresentation syncResult = realm.userStorage().syncUsers(storageProviderId, "triggerFullSync");
