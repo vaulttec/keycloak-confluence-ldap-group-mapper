@@ -4,7 +4,7 @@
 
     <groupId>org.vaulttec.keycloak</groupId>
     <artifactId>confluence-ldap-group-mapper</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
     <name>Keycloak Confluence LDAP Group Mapper</name>
     <description>Custom Keycloak LDAP Group Mapper which creates groups and group memberships from Confluence pages and page properties</description>
     <inceptionYear>2024</inceptionYear>
