@@ -86,8 +86,10 @@ public class ConfluenceGroupLDAPStorageMapper extends AbstractLDAPStorageMapper 
         updateAttributesOfKCGroup(kcGroup, page);
         visitedGroupIds.add(kcGroup.getId());
 
-        for (ConfluencePage child : page.getChildren()) {
-            updateKeycloakGroup(realm, child, kcGroup, syncResult, visitedGroupIds);
+        if (page.hasChildren()) {
+            for (ConfluencePage child : page.getChildren()) {
+                updateKeycloakGroup(realm, child, kcGroup, syncResult, visitedGroupIds);
+            }
         }
     }
 
@@ -163,7 +165,10 @@ public class ConfluenceGroupLDAPStorageMapper extends AbstractLDAPStorageMapper 
                         .anyMatch(username -> username.startsWith(firstName) && username.endsWith(lastName))).toList();
         if (!userPageProperties.isEmpty()) {
             for (ConfluencePageProperty userPageProperty : userPageProperties) {
-                mappingPages.add(contentCache.pagesMap().get(userPageProperty.getId()));
+                ConfluencePage page = contentCache.pagesMap().get(userPageProperty.getId());
+                if (page != null) {
+                    mappingPages.add(page);
+                }
             }
         }
         return mappingPages;

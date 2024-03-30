@@ -48,6 +48,10 @@ public class ConfluencePage {
         return children;
     }
 
+    public boolean hasChildren() {
+        return children != null && !children.isEmpty();
+    }
+
     /* package */ static List<ConfluencePage> getChildren(JsonNode node) {
         if (node.has("page") && node.get("page").has("results")) {
             return MAPPER.convertValue(node.get("page").get("results"), new TypeReference<>() {});
@@ -57,8 +61,10 @@ public class ConfluencePage {
 
     public static void mapChildren(ConfluencePage page, Map<String, ConfluencePage> pagesMap) {
         pagesMap.put(page.getId(), page);
-        for (ConfluencePage child : page.getChildren()) {
-            mapChildren(child, pagesMap);
+        if (page.hasChildren()) {
+            for (ConfluencePage child : page.getChildren()) {
+                mapChildren(child, pagesMap);
+            }
         }
     }
 }
