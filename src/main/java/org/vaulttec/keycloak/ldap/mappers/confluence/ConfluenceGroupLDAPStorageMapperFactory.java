@@ -10,7 +10,7 @@ import org.keycloak.provider.ProviderConfigProperty;
 import org.keycloak.provider.ProviderConfigurationBuilder;
 import org.keycloak.storage.ldap.LDAPStorageProvider;
 import org.keycloak.storage.ldap.mappers.AbstractLDAPStorageMapperFactory;
-import org.keycloak.storage.ldap.mappers.membership.group.GroupMapperConfig;
+import org.keycloak.storage.ldap.mappers.LDAPStorageMapper;
 import org.vaulttec.keycloak.ldap.mappers.confluence.content.ConfluenceContentCache;
 import org.vaulttec.keycloak.ldap.mappers.confluence.content.ConfluenceContentConfig;
 import org.vaulttec.keycloak.ldap.mappers.confluence.content.ConfluenceContentProvider;
@@ -38,8 +38,18 @@ public class ConfluenceGroupLDAPStorageMapperFactory extends AbstractLDAPStorage
     }
 
     @Override
-    public void onCreate(KeycloakSession session, RealmModel realm, ComponentModel model) {
+    public LDAPStorageMapper create(KeycloakSession session, ComponentModel model) {
         this.contentProvider = new ConfluenceContentProvider(session, model);
+        return super.create(session, model);
+    }
+
+    @Override
+    public void onCreate(KeycloakSession session, RealmModel realm, ComponentModel model) {
+        getContentCache(true);
+    }
+
+    @Override
+    public void onUpdate(KeycloakSession session, RealmModel realm, ComponentModel oldModel, ComponentModel newModel) {
         getContentCache(true);
     }
 
