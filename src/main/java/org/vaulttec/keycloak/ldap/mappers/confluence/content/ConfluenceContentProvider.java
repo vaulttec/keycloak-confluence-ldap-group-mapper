@@ -31,7 +31,7 @@ public class ConfluenceContentProvider {
         try {
             SimpleHttp simpleHttp = SimpleHttp.doGet(config.getBaseUrl() + "/rest/api/content/" + config.getParentPageId() + "/child", httpClient)
                     .auth(config.getAuthToken())
-                    .param("expand", "page" + ".child.page".repeat(config.getPageNesting() - 1));
+                    .param("expand", "page" + ".children.page".repeat(config.getPageNesting() - 1));
             List<ConfluencePage> children = ConfluencePage.getChildren(simpleHttp.asJson());
             LOG.debugf("Retrieved %s child pages from parent page %s", children.size(), config.getParentPageId());
             return children;
