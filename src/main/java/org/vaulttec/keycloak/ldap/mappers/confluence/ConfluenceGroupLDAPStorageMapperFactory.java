@@ -74,7 +74,15 @@ public class ConfluenceGroupLDAPStorageMapperFactory extends AbstractLDAPStorage
         if (baseUrl.trim().endsWith("/")) {
             throw new ComponentValidationException("No trailing slash in Base URL allowed");
         }
-        String groupsPath = new GroupMapperConfig(config).getGroupsPath();
+        int pageNesting = new ConfluenceContentConfig(config).getPageNesting();
+        if (pageNesting <= 0 || pageNesting > 99) {
+            throw new ComponentValidationException("Invalid page nesting depth - must be > 0 and < 100");
+        }
+        int memberColumnIndex = new ConfluenceContentConfig(config).getMemberColumnIndex();
+        if (memberColumnIndex <= 0 || memberColumnIndex > 99) {
+            throw new ComponentValidationException("Invalid member column index - must be > 0 and < 100");
+        }
+        String groupsPath = new ConfluenceGroupMapperConfig(config).getGroupsPath();
         if (!DEFAULT_GROUPS_PATH.equals(groupsPath) && KeycloakModelUtils.findGroupByPath(session, realm, groupsPath) == null) {
             throw new ComponentValidationException("ldapErrorMissingGroupsPathGroup");
         }
