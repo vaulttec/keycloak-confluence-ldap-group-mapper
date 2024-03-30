@@ -125,21 +125,39 @@ public class ConfluenceGroupLDAPStorageMapper extends AbstractLDAPStorageMapper 
 
     @Override
     public void onImportUserFromLDAP(LDAPObject ldapUser, UserModel user, RealmModel realm, boolean isCreate) {
-        String firstName = ldapUser.getAttributeAsString("givenName");
         String lastName = ldapUser.getAttributeAsString("sn");
-        if (firstName != null && lastName != null) {
-            List<ConfluencePage> mappedPages = getMappedPages(firstName, lastName);
-            if (!mappedPages.isEmpty()) {
-                GroupModel parent = getKcGroupsPathGroup(realm);
-                for (ConfluencePage mappedPage : mappedPages) {
-                    GroupModel mappedGroup = findKcGroupOrSyncFromConfluence(realm, mappedPage, parent);
-                    if (mappedGroup != null && !user.isMemberOf(mappedGroup)) {
-                        LOG.debugf("User '%s' joins Confluence group '%s' during import from LDAP", user.getUsername(), mappedGroup.getName());
-                        user.joinGroup(mappedGroup);
+        if (lastName != null) {
+            String firstName = getFirstName(ldapUser, lastName);
+            if (firstName != null) {
+                List<ConfluencePage> mappedPages = getMappedPages(firstName, lastName);
+                if (!mappedPages.isEmpty()) {
+                    GroupModel parent = getKcGroupsPathGroup(realm);
+                    for (ConfluencePage mappedPage : mappedPages) {
+                        GroupModel mappedGroup = findKcGroupOrSyncFromConfluence(realm, mappedPage, parent);
+                        if (mappedGroup != null && !user.isMemberOf(mappedGroup)) {
+                            LOG.debugf("User '%s' joins Confluence group '%s' during import from LDAP", user.getUsername(), mappedGroup.getName());
+                            user.joinGroup(mappedGroup);
+                        }
                     }
                 }
             }
         }
+    }
+
+    private static String getFirstName(LDAPObject ldapUser, String lastName) {
+        String firstName = ldapUser.getAttributeAsString("givenName");
+        if (firstName == null) {
+            // Retrieve first name from common name
+            String commonName = ldapUser.getAttributeAsString("cn");
+            if (commonName != null) {
+                if (commonName.startsWith(lastName + ",")) {
+                    firstName = commonName.substring(lastName.length() + 1).trim();
+                } else if (commonName.endsWith(lastName)) {
+                    firstName = commonName.substring(0, commonName.length() - lastName.length()).trim();
+                }
+            }
+        }
+        return firstName;
     }
 
     private GroupModel findKcGroupOrSyncFromConfluence(RealmModel realm, ConfluencePage page, GroupModel parent) {
