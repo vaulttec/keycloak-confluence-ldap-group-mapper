@@ -45,11 +45,13 @@ public class ConfluenceGroupLDAPStorageMapperFactory extends AbstractLDAPStorage
 
     @Override
     public void onCreate(KeycloakSession session, RealmModel realm, ComponentModel model) {
+        this.contentProvider = new ConfluenceContentProvider(session, model);
         getContentCache(true);
     }
 
     @Override
     public void onUpdate(KeycloakSession session, RealmModel realm, ComponentModel oldModel, ComponentModel newModel) {
+        this.contentProvider = new ConfluenceContentProvider(session, newModel);
         getContentCache(true);
     }
 
