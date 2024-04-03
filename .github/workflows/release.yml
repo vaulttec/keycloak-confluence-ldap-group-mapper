@@ -21,6 +21,6 @@ jobs:
       - name: Create GitHub release with extension jar
         uses: ncipollo/release-action@v1
         with:
-          artifacts: 'target/*.jar'
+          artifacts: 'target/confluence-ldap-group-mapper.jar'
           artifactContentType: application/jar
           token: ${{ secrets.GITHUB_TOKEN }}
