@@ -45,7 +45,7 @@ public class ConfluenceContentProviderIT {
         when(model.get(PAGE_NESTING, DEFAULT_PAGE_NESTING)).thenReturn(4);
         when(model.get(SPACE_KEY)).thenReturn("TEST");
         when(model.get(PAGE_LABELS)).thenReturn("label1 , label2 , lbl-test");
-        when(model.get(PAGE_PROPERTY_NAME)).thenReturn("Team");
+        when(model.get(PAGE_PROPERTY_NAME)).thenReturn("Members");
         when(model.get(MEMBER_COLUMN_INDEX, DEFAULT_MEMBER_COLUMN_INDEX)).thenReturn(1);
         provider = new ConfluenceContentProvider(session, model);
     }

@@ -42,7 +42,7 @@ components:
               confluenceContent.pageNesting: ["4"]
               confluenceContent.spaceKey: ["TEST"]
               confluenceContent.pageLabels: ["label1, label2, label3"]
-              confluenceContent.pagePropertyName: ["Team"]
+              confluenceContent.pagePropertyName: ["Members"]
               confluenceContent.memberColumnIndex: ["1"]
               confluenceGroups.dropNonExistingGroups: ["true"]
               confluenceGroups.groupsPath: ["/"]
