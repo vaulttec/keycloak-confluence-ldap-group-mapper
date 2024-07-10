@@ -27,7 +27,7 @@ public class ConfluenceContentProvider {
         this.httpClient = session.getProvider(HttpClientProvider.class).getHttpClient();
     }
 
-    public List<ConfluencePage> getPages() {
+    public List<ConfluencePage> getChildPages() {
         try {
             SimpleHttp simpleHttp = SimpleHttp.doGet(config.getBaseUrl() + "/rest/api/content/" + config.getParentPageId() + "/child", httpClient)
                     .auth(config.getAuthToken())
@@ -36,7 +36,7 @@ public class ConfluenceContentProvider {
             LOG.debugf("Retrieved %s child pages from parent page %s", children.size(), config.getParentPageId());
             return children;
         } catch (IOException e) {
-            LOG.errorf(e, "Retrieving child page from %s failed", config.getBaseUrl());
+            LOG.errorf(e, "Retrieving child pages from %s failed", config.getBaseUrl());
         }
         return Collections.emptyList();
     }

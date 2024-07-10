@@ -7,7 +7,7 @@ import java.util.Map;
 public record ConfluenceContentCache(List<ConfluencePage> pages, Map<String, ConfluencePage> pagesMap,
                                      List<ConfluencePageProperty> pageProperties) {
     public static ConfluenceContentCache of(ConfluenceContentProvider contentProvider) {
-        List<ConfluencePage> pages = contentProvider.getPages();
+        List<ConfluencePage> pages = contentProvider.getChildPages();
         Map<String, ConfluencePage> pagesMap = new HashMap<>();
         pages.forEach(p -> ConfluencePage.mapChildren(p, pagesMap));
         List<ConfluencePageProperty> pageProperties = contentProvider.getPageProperties();

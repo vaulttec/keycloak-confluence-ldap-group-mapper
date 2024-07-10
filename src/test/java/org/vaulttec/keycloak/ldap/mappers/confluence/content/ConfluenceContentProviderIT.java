@@ -56,8 +56,8 @@ public class ConfluenceContentProviderIT {
     }
 
     @Test
-    public void testGetPagesWithTitle() {
-        List<ConfluencePage> pages = provider.getPages();
+    public void testGetChildPagesWithTitle() {
+        List<ConfluencePage> pages = provider.getChildPages();
         assertNotNull(pages);
         assertEquals(2, pages.size());
         assertEquals("Page 1", pages.get(0).getTitle());
