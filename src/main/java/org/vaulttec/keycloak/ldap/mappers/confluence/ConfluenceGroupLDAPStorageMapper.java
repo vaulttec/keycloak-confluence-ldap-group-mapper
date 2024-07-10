@@ -195,10 +195,14 @@ public class ConfluenceGroupLDAPStorageMapper extends AbstractLDAPStorageMapper 
     }
 
     /**
-     * If username specified as "<last name>, <first name>" then convert to "<first name> <last name>".
+     * Remove title (Dr.), diacritics (like accents) and if username specified as "<last name>, <first name>" then convert to "<first name> <last name>".
      */
     public static Function<String, String> normalizeUsername() {
         return username -> {
+            if (username.startsWith("Dr. ")) {
+                username = username.substring(4);
+            }
+//            username = Normalizer.normalize(username, Normalizer.Form.NFKD).replaceAll("\\p{M}", "");
             int delimiterPos = username.indexOf(",");
             if (delimiterPos >= 0) {
                 return username.substring(delimiterPos + 1).trim() + " " + username.substring(0, delimiterPos).trim();
