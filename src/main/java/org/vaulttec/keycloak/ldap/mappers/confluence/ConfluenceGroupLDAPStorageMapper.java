@@ -24,6 +24,7 @@ import java.util.stream.Stream;
 
 public class ConfluenceGroupLDAPStorageMapper extends AbstractLDAPStorageMapper {
     private static final Logger LOG = Logger.getLogger(ConfluenceGroupLDAPStorageMapper.class);
+    public static final String ATTRIBUTE_CONFLUENCE_PAGE_ID = "confluencePageID";
     public static final String ATTRIBUTE_CONFLUENCE_PAGE_URL = "confluencePageURL";
     private final ConfluenceGroupMapperConfig mapperConfig;
     private final ConfluenceContentConfig contentConfig;
@@ -94,6 +95,7 @@ public class ConfluenceGroupLDAPStorageMapper extends AbstractLDAPStorageMapper 
     }
 
     private void updateAttributesOfKCGroup(GroupModel kcGroup, ConfluencePage page) {
+        kcGroup.setSingleAttribute(ATTRIBUTE_CONFLUENCE_PAGE_ID, page.getId());
         kcGroup.setSingleAttribute(ATTRIBUTE_CONFLUENCE_PAGE_URL, contentConfig.getBaseUrl() + page.getRelativeUrl());
     }
 
@@ -114,7 +116,7 @@ public class ConfluenceGroupLDAPStorageMapper extends AbstractLDAPStorageMapper 
 
             @Override
             public void leaveGroup(GroupModel group) {
-                if (group.getFirstAttribute(ATTRIBUTE_CONFLUENCE_PAGE_URL) != null) {
+                if (group.getFirstAttribute(ATTRIBUTE_CONFLUENCE_PAGE_ID) != null) {
                     throw new ModelException("Not possible to leave group maintained by Confluence mapper");
                 } else {
                     super.leaveGroup(group);
