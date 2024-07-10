@@ -26,8 +26,8 @@ import static org.testcontainers.containers.BindMode.READ_ONLY;
 public class KeycloakEnvironment {
     private static final Logger LOG = LoggerFactory.getLogger(KeycloakEnvironment.class);
     public static final String GLOBAL_ENV_PATH = "config/global.env";
-    public static final String KEYCLOAK_IMAGE = "quay.io/keycloak/keycloak:24.0.1";
-    public static final String KEYCLOAK_CONFIG_CLI_IMAGE = "quay.io/adorsys/keycloak-config-cli:5.11.1-24.0.1";
+    public static final String KEYCLOAK_IMAGE = "quay.io/keycloak/keycloak:24.0.5";
+    public static final String KEYCLOAK_CONFIG_CLI_IMAGE = "quay.io/adorsys/keycloak-config-cli:6.1.5-24.0.5";
     public static final String OPENLDAP_IMAGE = "osixia/openldap:1.5.0";
     public static final String MOCK_SERVER_IMAGE = "mockserver/mockserver:5.15.0";
 
@@ -140,6 +140,7 @@ public class KeycloakEnvironment {
                 .withNetworkAliases("keycloak")
                 .withEnv("DEBUG", "true")
                 .withEnv("DEBUG_PORT", "*:8787")
+                .withDebugFixedPort(8787, false)
                 .withContextPath(globalEnv.getOrDefault("KC_HTTP_RELATIVE_PATH", "/"))
                 .withProviderLibsFrom(dependencies)
                 .withProviderClassesFrom("target/classes");
@@ -151,7 +152,7 @@ public class KeycloakEnvironment {
                 .withNetworkAliases("keycloak-provisioning")
                 .withEnv(readEnvFile(GLOBAL_ENV_PATH))
                 .withFileSystemBind("config/realms", "/config", READ_ONLY)
-                .waitingFor(Wait.forLogMessage(".*keycloak-config-cli running in.*", 1));
+                .waitingFor(Wait.forLogMessage(".*keycloak-config-cli ran in.*", 1));
     }
 
     public static GenericContainer<?> createOpenLDAPContainer() {
