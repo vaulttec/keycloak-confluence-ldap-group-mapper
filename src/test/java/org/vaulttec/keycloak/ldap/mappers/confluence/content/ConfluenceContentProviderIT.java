@@ -19,7 +19,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.mockserver.mock.OpenAPIExpectation.openAPIExpectation;
 import static org.vaulttec.keycloak.ldap.mappers.confluence.content.ConfluenceContentConfig.*;
 
 public class ConfluenceContentProviderIT {
@@ -28,9 +27,8 @@ public class ConfluenceContentProviderIT {
 
     @BeforeAll
     static void setup() throws Exception {
-        Configuration config = new Configuration().logLevel(Level.WARN);
+        Configuration config = new Configuration().logLevel(Level.WARN).initializationJsonPath("config/mock/initializerJson.json");
         mockServer = ClientAndServer.startClientAndServer(config);
-        mockServer.upsert(openAPIExpectation("config/mock/confluence-openapi.yaml"));
         URL mockEndpoint = new URIBuilder("http://localhost").setPort(mockServer.getPort()).setPath("confluence").build().toURL();
 
         HttpClientProvider clientProvider = mock(HttpClientProvider.class);
@@ -63,6 +61,9 @@ public class ConfluenceContentProviderIT {
         assertEquals("Page 1", pages.get(0).getTitle());
         assertEquals(2, pages.get(0).getChildren().size());
         assertEquals("Page 1.1", pages.get(0).getChildren().get(0).getTitle());
+        assertEquals(2, pages.get(0).getChildren().size());
+        assertEquals("Page 1.1.1", pages.get(0).getChildren().get(0).getChildren().get(0).getTitle());
+        assertEquals("Page 1.1.2", pages.get(0).getChildren().get(0).getChildren().get(1).getTitle());
         assertEquals("Page 1.2", pages.get(0).getChildren().get(1).getTitle());
         assertEquals("Page 2", pages.get(1).getTitle());
     }

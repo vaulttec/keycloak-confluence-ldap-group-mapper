@@ -44,12 +44,16 @@ public class ConfluencePage {
         return relativeUrl;
     }
 
+    public boolean hasChildren() {
+        return children != null && !children.isEmpty();
+    }
+
     public List<ConfluencePage> getChildren() {
         return children;
     }
 
-    public boolean hasChildren() {
-        return children != null && !children.isEmpty();
+    protected void setChildren(List<ConfluencePage> children) {
+        this.children = children;
     }
 
     /* package */ static List<ConfluencePage> getChildren(JsonNode node) {

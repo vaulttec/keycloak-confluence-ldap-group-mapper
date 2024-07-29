@@ -1,3 +1,66 @@
-{
-  "specUrlOrPayload": "/config/confluence-openapi.yaml"
-}
+[
+  {
+    "httpRequest": {
+      "method": "GET",
+      "path": "/confluence/rest/api/content/{id}/child/{type}",
+      "pathParameters": {
+        "id": ["1234"],
+        "type": ["page"]
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "body": "{\"page\":{\"results\":[{\"id\":\"1\",\"title\":\"Page 1\",\"children\":{\"page\":{\"results\":[{\"id\":\"11\",\"title\":\"Page 1.1\",\"_links\":{\"tinyui\":\"/x/Pcz-B11\"}},{\"id\":\"12\",\"title\":\"Page 1.2\",\"_links\":{\"tinyui\":\"/x/Pcz-B12\"}}]}},\"_links\":{\"tinyui\":\"/x/Pcz-B1\"}},{\"id\":\"2\",\"title\":\"Page 2\",\"children\":{\"page\":{\"results\":[]}},\"_links\":{\"tinyui\":\"/x/Pcz-B2\"}}]}}",
+      "headers": {
+        "Content-Type": ["application/json"]
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "GET",
+      "path": "/confluence/rest/api/content/{id}/child/{type}",
+      "pathParameters": {
+        "id": ["11"],
+        "type": ["page"]
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "body": "{\"page\":{\"results\":[{\"id\":\"111\",\"title\":\"Page 1.1.1\",\"children\":{\"page\":{\"results\":[]}},\"_links\":{\"tinyui\":\"/x/Pcz-B111\"}},{\"id\":\"112\",\"title\":\"Page 1.1.2\",\"children\":{\"page\":{\"results\":[]}},\"_links\":{\"tinyui\":\"/x/Pcz-B112\"}}]}}",
+      "headers": {
+        "Content-Type": ["application/json"]
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "GET",
+      "path": "/confluence/rest/api/content/{id}/child/{type}",
+      "pathParameters": {
+        "id": ["12"],
+        "type": ["page"]
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "body": "{ \"page\": { \"results\": [] } }",
+      "headers": {
+        "Content-Type": ["application/json"]
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "GET",
+      "path": "/confluence/rest/masterdetail/1.0/detailssummary/lines"
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "body": "{\"currentPage\":0,\"totalPages\":1,\"renderedHeadings\":[\"Team\"],\"detailLines\":[{\"id\":11,\"title\":\"Team 1\",\"details\":[\"<div class=\\\"content-wrapper\\\"><div class=\\\"table-wrap\\\"><table class=\\\"wrapped confluenceTable\\\" data-mce-resize=\\\"false\\\"><colgroup><col/><col/><col/><col/></colgroup><tbody><tr><th class=\\\"confluenceTh\\\">Name</th><th class=\\\"confluenceTh\\\">Position</th><th class=\\\"confluenceTh\\\">Function</th><th class=\\\"confluenceTh\\\">Location</th></tr><tr><td class=\\\"confluenceTd\\\">John Doo</td><td class=\\\"confluenceTd\\\">Manager</td><td class=\\\"confluenceTd\\\"><a href=\\\"/confluence/display/ORG/Product+Owner\\\">Product Owner</a></td><td class=\\\"confluenceTd\\\">Anywhere</td></tr><tr><td class=\\\"confluenceTd\\\">  Doo,   Jim  </td><td class=\\\"confluenceTd\\\">Associate</td><td class=\\\"confluenceTd\\\"><a href=\\\"/confluence/display/ORG/Developer\\\">Developer</a></td><td class=\\\"confluenceTd\\\">Nowhere</td></tr><tr><td class=\\\"confluenceTd\\\">Jane Doo</td><td class=\\\"confluenceTd\\\">Analyst</td><td class=\\\"confluenceTd\\\"><a href=\\\"/confluence/display/ORG/Developer\\\">Developer</a></td><td class=\\\"confluenceTd\\\">Here</td></tr></tbody></table></div></div>\"]},{\"id\":12,\"title\":\"Team 2\",\"details\":[\"<div class=\\\"content-wrapper\\\"><div class=\\\"table-wrap\\\"><table class=\\\"wrapped confluenceTable\\\" data-mce-resize=\\\"false\\\"><colgroup><col/><col/><col/><col/></colgroup><tbody><tr><th class=\\\"confluenceTh\\\">Name</th><th class=\\\"confluenceTh\\\">Position</th><th class=\\\"confluenceTh\\\">Function</th><th class=\\\"confluenceTh\\\">Location</th></tr><tr><td class=\\\"confluenceTd\\\">Jane Doo</td><td class=\\\"confluenceTd\\\">Manager</td><td class=\\\"confluenceTd\\\"><a href=\\\"/confluence/display/ORG/Product+Owner\\\">Product Owner</a></td><td class=\\\"confluenceTd\\\">Here</td></tr><tr><td class=\\\"confluenceTd\\\"> Doo,   John </td><td class=\\\"confluenceTd\\\">Associate</td><td class=\\\"confluenceTd\\\"><a href=\\\"/confluence/display/ORG/Developer\\\">Developer</a></td><td class=\\\"confluenceTd\\\">Nowhere</td></tr><tr><td class=\\\"confluenceTd\\\">Jim Doo</td><td class=\\\"confluenceTd\\\">Analyst</td><td class=\\\"confluenceTd\\\"><a href=\\\"/confluence/display/ORG/Developer\\\">Developer</a></td><td class=\\\"confluenceTd\\\">Anywhere</td></tr></tbody></table></div></div>\"]}]}",
+      "headers": {
+        "Content-Type": ["application/json"]
+      }
+    }
+  }
+]

@@ -28,43 +28,64 @@ public class ConfluenceContentProvider {
     }
 
     public List<ConfluencePage> getChildPages() {
-        try {
-            SimpleHttp simpleHttp = SimpleHttp.doGet(config.getBaseUrl() + "/rest/api/content/" + config.getParentPageId() + "/child", httpClient)
-                    .auth(config.getAuthToken())
-                    .param("expand", "page" + ".children.page".repeat(config.getPageNesting() - 1));
-            List<ConfluencePage> children = ConfluencePage.getChildren(simpleHttp.asJson());
-            LOG.debugf("Retrieved %s child pages from parent page %s", children.size(), config.getParentPageId());
-            return children;
+        return getChildPages(config.getParentPageId());
+    }
+
+    private List<ConfluencePage> getChildPages(String pageId) {
+        SimpleHttp simpleHttp = SimpleHttp.doGet(config.getBaseUrl() + "/rest/api/content/" + pageId + "/child/page", httpClient)
+                .auth(config.getAuthToken())
+                .param("expand", "children.page")
+                .param("limit", "100");
+        try (SimpleHttp.Response response = simpleHttp.asResponse()) {
+            if (response.getStatus() == 200) {
+                List<ConfluencePage> children = ConfluencePage.getChildren(response.asJson());
+                LOG.debugf("Retrieved %s child pages from parent page %s", children.size(), pageId);
+                // Recursively retrieve grand-grand child pages from grand child pages
+                for (ConfluencePage child : children) {
+                    for (ConfluencePage grandChild : child.getChildren()) {
+                        grandChild.setChildren(getChildPages(grandChild.getId()));
+                    }
+                }
+                return children;
+            } else {
+                throw new IOException(response.asJson().toString());
+            }
         } catch (IOException e) {
-            LOG.errorf(e, "Retrieving child pages from %s failed", config.getBaseUrl());
+            LOG.errorf(e, "Retrieving child pages from %s failed: %s", config.getBaseUrl(), e.getMessage());
         }
         return Collections.emptyList();
     }
 
     public List<ConfluencePageProperty> getPageProperties() {
         List<ConfluencePageProperty> pageProperties = new ArrayList<>();
-        try {
-            for (int pageIndex = 0, totalPages = 1; totalPages > pageIndex; pageIndex++) {
-                SimpleHttp simpleHttp = SimpleHttp.doGet(config.getBaseUrl() + "/rest/masterdetail/1.0/detailssummary/lines", httpClient)
-                        .auth(config.getAuthToken())
-                        .param("spaceKey", config.getSpaceKey())
-                        .param("cql", "type=page AND " + Arrays.stream(config.getPageLabels().split(","))
-                                .map(label -> "label='" + label.trim() + "'").collect(Collectors.joining(" AND ")))
-                        .param("headings", config.getPagePropertyName()).param("pageIndex", String.valueOf(pageIndex))
-                        .param("pageSize", "500");
-                JsonNode node = simpleHttp.asJson();
-                if (node.has("totalPages") && node.has("detailLines")) {
-                    totalPages = node.get("totalPages").asInt();
-                    pageProperties.addAll(ConfluencePageProperty.getPageProperties(node));
+        for (int pageIndex = 0, totalPages = 1; totalPages > pageIndex; pageIndex++) {
+            SimpleHttp simpleHttp = SimpleHttp.doGet(config.getBaseUrl() + "/rest/masterdetail/1.0/detailssummary/lines", httpClient)
+                    .auth(config.getAuthToken())
+                    .param("spaceKey", config.getSpaceKey())
+                    .param("cql", "type=page AND " + Arrays.stream(config.getPageLabels().split(","))
+                            .map(label -> "label='" + label.trim() + "'").collect(Collectors.joining(" AND ")))
+                    .param("headings", config.getPagePropertyName())
+                    .param("pageIndex", String.valueOf(pageIndex))
+                    .param("pageSize", "500");
+            try (SimpleHttp.Response response = simpleHttp.asResponse()) {
+                if (response.getStatus() == 200) {
+                    JsonNode node = response.asJson();
+                    if (node.has("totalPages") && node.has("detailLines")) {
+                        totalPages = node.get("totalPages").asInt();
+                        pageProperties.addAll(ConfluencePageProperty.getPageProperties(node));
+                    }
+                } else {
+                    throw new IOException(response.asJson().toString());
                 }
+            } catch (IOException e) {
+                LOG.errorf(e, "Retrieving page properties from %s failed: %s", config.getBaseUrl(), e.getMessage());
+                return Collections.emptyList();
             }
-            for (ConfluencePageProperty pageProperty : pageProperties) {
-                pageProperty.setValues(config.getMemberColumnIndex());
-            }
-            LOG.debugf("Retrieved %s page properties from space %s", pageProperties.size(), config.getSpaceKey());
-        } catch (IOException e) {
-            LOG.errorf(e, "Retrieving page properties from %s failed", config.getBaseUrl());
         }
+        for (ConfluencePageProperty pageProperty : pageProperties) {
+            pageProperty.setValues(config.getMemberColumnIndex());
+        }
+        LOG.debugf("Retrieved %s page properties from space %s", pageProperties.size(), config.getSpaceKey());
         return pageProperties;
     }
 }

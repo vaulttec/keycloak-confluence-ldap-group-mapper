@@ -90,5 +90,7 @@ public class ConfluenceGroupLDAPStorageMapperIT {
         List<GroupRepresentation> groups = realm.groups().query("Page", true);
         assertEquals(2, groups.size());
         assertEquals(2, groups.get(0).getSubGroupCount());
+        assertEquals(2, groups.get(0).getSubGroups().get(0).getSubGroupCount());
+        assertEquals(0, groups.get(1).getSubGroupCount());
     }
 }

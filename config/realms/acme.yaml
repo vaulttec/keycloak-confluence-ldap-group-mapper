@@ -38,7 +38,7 @@ components:
             config:
               confluenceContent.baseUrl: ["$(env:CONFLUENCE_URL:-confluence-url)"]
               confluenceContent.authToken: ["token"]
-              confluenceContent.parentPageId: [ "123"]
+              confluenceContent.parentPageId: [ "1234"]
               confluenceContent.pageNesting: ["4"]
               confluenceContent.spaceKey: ["TEST"]
               confluenceContent.pageLabels: ["label1, label2, label3"]
