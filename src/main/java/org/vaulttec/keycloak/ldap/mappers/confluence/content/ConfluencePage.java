@@ -29,7 +29,11 @@ public class ConfluencePage {
 
     @JsonProperty("children")
     protected void unnestChildren(JsonNode node) {
-        children = getChildren(node);
+        if (node.has("page") && node.get("page").has("results")) {
+            children = MAPPER.convertValue(node.get("page").get("results"), new TypeReference<>() {});
+        } else {
+            children = Collections.emptyList();
+        }
     }
 
     public String getId() {
@@ -56,9 +60,9 @@ public class ConfluencePage {
         this.children = children;
     }
 
-    /* package */ static List<ConfluencePage> getChildren(JsonNode node) {
-        if (node.has("page") && node.get("page").has("results")) {
-            return MAPPER.convertValue(node.get("page").get("results"), new TypeReference<>() {});
+    public static List<ConfluencePage> of(JsonNode node) {
+        if (node.has("results")) {
+            return MAPPER.convertValue(node.get("results"), new TypeReference<>() {});
         }
         return Collections.emptyList();
     }

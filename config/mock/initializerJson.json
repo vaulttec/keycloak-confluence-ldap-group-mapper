@@ -10,7 +10,7 @@
     },
     "httpResponse": {
       "statusCode": 200,
-      "body": "{\"page\":{\"results\":[{\"id\":\"1\",\"title\":\"Page 1\",\"children\":{\"page\":{\"results\":[{\"id\":\"11\",\"title\":\"Page 1.1\",\"_links\":{\"tinyui\":\"/x/Pcz-B11\"}},{\"id\":\"12\",\"title\":\"Page 1.2\",\"_links\":{\"tinyui\":\"/x/Pcz-B12\"}}]}},\"_links\":{\"tinyui\":\"/x/Pcz-B1\"}},{\"id\":\"2\",\"title\":\"Page 2\",\"children\":{\"page\":{\"results\":[]}},\"_links\":{\"tinyui\":\"/x/Pcz-B2\"}}]}}",
+      "body": "{\"results\":[{\"id\":\"1\",\"title\":\"Page 1\",\"children\":{\"page\":{\"results\":[{\"id\":\"11\",\"title\":\"Page 1.1\",\"_links\":{\"tinyui\":\"/x/Pcz-B11\"}},{\"id\":\"12\",\"title\":\"Page 1.2\",\"_links\":{\"tinyui\":\"/x/Pcz-B12\"}}]}},\"_links\":{\"tinyui\":\"/x/Pcz-B1\"}},{\"id\":\"2\",\"title\":\"Page 2\",\"children\":{\"page\":{\"results\":[]}},\"_links\":{\"tinyui\":\"/x/Pcz-B2\"}}]}",
       "headers": {
         "Content-Type": ["application/json"]
       }
@@ -27,7 +27,7 @@
     },
     "httpResponse": {
       "statusCode": 200,
-      "body": "{\"page\":{\"results\":[{\"id\":\"111\",\"title\":\"Page 1.1.1\",\"children\":{\"page\":{\"results\":[]}},\"_links\":{\"tinyui\":\"/x/Pcz-B111\"}},{\"id\":\"112\",\"title\":\"Page 1.1.2\",\"children\":{\"page\":{\"results\":[]}},\"_links\":{\"tinyui\":\"/x/Pcz-B112\"}}]}}",
+      "body": "{\"results\":[{\"id\":\"111\",\"title\":\"Page 1.1.1\",\"children\":{\"page\":{\"results\":[]}},\"_links\":{\"tinyui\":\"/x/Pcz-B111\"}},{\"id\":\"112\",\"title\":\"Page 1.1.2\",\"children\":{\"page\":{\"results\":[]}},\"_links\":{\"tinyui\":\"/x/Pcz-B112\"}}]}",
       "headers": {
         "Content-Type": ["application/json"]
       }
@@ -44,7 +44,7 @@
     },
     "httpResponse": {
       "statusCode": 200,
-      "body": "{ \"page\": { \"results\": [] } }",
+      "body": "{\"results\":[]}",
       "headers": {
         "Content-Type": ["application/json"]
       }

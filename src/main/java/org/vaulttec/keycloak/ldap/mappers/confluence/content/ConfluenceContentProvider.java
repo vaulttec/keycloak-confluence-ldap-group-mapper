@@ -38,7 +38,7 @@ public class ConfluenceContentProvider {
                 .param("limit", "100");
         try (SimpleHttp.Response response = simpleHttp.asResponse()) {
             if (response.getStatus() == 200) {
-                List<ConfluencePage> children = ConfluencePage.getChildren(response.asJson());
+                List<ConfluencePage> children = ConfluencePage.of(response.asJson());
                 LOG.debugf("Retrieved %s child pages from parent page %s", children.size(), pageId);
                 // Recursively retrieve grand-grand child pages from grand child pages
                 for (ConfluencePage child : children) {
@@ -70,9 +70,9 @@ public class ConfluenceContentProvider {
             try (SimpleHttp.Response response = simpleHttp.asResponse()) {
                 if (response.getStatus() == 200) {
                     JsonNode node = response.asJson();
-                    if (node.has("totalPages") && node.has("detailLines")) {
+                    if (node.has("totalPages")) {
                         totalPages = node.get("totalPages").asInt();
-                        pageProperties.addAll(ConfluencePageProperty.getPageProperties(node));
+                        pageProperties.addAll(ConfluencePageProperty.of(node));
                     }
                 } else {
                     throw new IOException(response.asJson().toString());

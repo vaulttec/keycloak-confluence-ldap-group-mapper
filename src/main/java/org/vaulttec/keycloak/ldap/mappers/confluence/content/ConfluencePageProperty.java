@@ -26,7 +26,7 @@ public class ConfluencePageProperty {
         return id;
     }
 
-    /* package */ void setValues(int columnIndex) {
+    protected void setValues(int columnIndex) {
         values = new ArrayList<>();
         for (String detail : details) {
             Elements elements = Jsoup.parse(detail).selectXpath("//tr/td[position()=" + columnIndex + "]");
@@ -38,7 +38,7 @@ public class ConfluencePageProperty {
         return values;
     }
 
-    /* package */ static List<ConfluencePageProperty> getPageProperties(JsonNode node) {
+    public static List<ConfluencePageProperty> of(JsonNode node) {
         if (node.has("detailLines")) {
             return MAPPER.convertValue(node.get("detailLines"), new TypeReference<>() {});
         }
