@@ -6,8 +6,6 @@ public class ConfluenceContentConfig {
     public static final String BASE_URL = "confluenceContent.baseUrl";
     public static final String AUTH_TOKEN = "confluenceContent.authToken";
     public static final String PARENT_PAGE_ID = "confluenceContent.parentPageId";
-    public static final String PAGE_NESTING = "confluenceContent.pageNesting";
-    public static final int DEFAULT_PAGE_NESTING = 3;
     public static final String SPACE_KEY = "confluenceContent.spaceKey";
     public static final String PAGE_PROPERTY_NAME = "confluenceContent.pagePropertyName";
     public static final String PAGE_LABELS = "confluenceContent.pageLabels";
@@ -29,10 +27,6 @@ public class ConfluenceContentConfig {
 
     public String getParentPageId() {
         return model.get(PARENT_PAGE_ID).trim();
-    }
-
-    public int getPageNesting() {
-        return model.get(PAGE_NESTING, DEFAULT_PAGE_NESTING);
     }
 
     public String getSpaceKey() {

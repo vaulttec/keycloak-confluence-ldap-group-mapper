@@ -61,7 +61,6 @@ public class ConfluenceGroupLDAPStorageMapperFactory extends AbstractLDAPStorage
                 .property().name(BASE_URL).label("Base URL").helpText("Base URL of the Confluence Server (with context path - if any)").type(ProviderConfigProperty.STRING_TYPE).required(true).add()
                 .property().name(AUTH_TOKEN).label("Bearer Token").helpText("Personal access token for API authentication").type(ProviderConfigProperty.PASSWORD).secret(true).required(true).add()
                 .property().name(PARENT_PAGE_ID).label("Parent Page ID").helpText("ID of parent page the child pages are retrieved from").type(ProviderConfigProperty.STRING_TYPE).required(true).add()
-                .property().name(PAGE_NESTING).label("Page Nesting Depth").helpText("Max depth of nested child pages").type(ProviderConfigProperty.STRING_TYPE).defaultValue(ConfluenceContentConfig.DEFAULT_PAGE_NESTING).required(true).add()
                 .property().name(SPACE_KEY).label("Space Key").helpText("Key of Confluence space the pages are belonging to").type(ProviderConfigProperty.STRING_TYPE).required(true).add()
                 .property().name(PAGE_LABELS).label("Page Label(s)").helpText("Comma-separated list of labels required for the pages").type(ProviderConfigProperty.STRING_TYPE).add()
                 .property().name(PAGE_PROPERTY_NAME).label("Page Property Name").helpText("Name of page property with the table holding the group members ").type(ProviderConfigProperty.STRING_TYPE).required(true).add()
@@ -76,7 +75,6 @@ public class ConfluenceGroupLDAPStorageMapperFactory extends AbstractLDAPStorage
         checkMandatoryConfigAttribute(BASE_URL, "Base URL", config);
         checkMandatoryConfigAttribute(AUTH_TOKEN, "Bearer Token", config);
         checkMandatoryConfigAttribute(PARENT_PAGE_ID, "Parent Page ID", config);
-        checkMandatoryConfigAttribute(PAGE_NESTING, "Page Nesting Depth", config);
         checkMandatoryConfigAttribute(SPACE_KEY, "Space Key", config);
         checkMandatoryConfigAttribute(PAGE_PROPERTY_NAME, "Page Property Name", config);
         checkMandatoryConfigAttribute(MEMBER_COLUMN_INDEX, "Member Column Index", config);
@@ -85,10 +83,6 @@ public class ConfluenceGroupLDAPStorageMapperFactory extends AbstractLDAPStorage
         String baseUrl = new ConfluenceContentConfig(config).getBaseUrl();
         if (baseUrl.trim().endsWith("/")) {
             throw new ComponentValidationException("No trailing slash in Base URL allowed");
-        }
-        int pageNesting = new ConfluenceContentConfig(config).getPageNesting();
-        if (pageNesting <= 0 || pageNesting > 99) {
-            throw new ComponentValidationException("Invalid page nesting depth - must be > 0 and < 100");
         }
         int memberColumnIndex = new ConfluenceContentConfig(config).getMemberColumnIndex();
         if (memberColumnIndex <= 0 || memberColumnIndex > 99) {

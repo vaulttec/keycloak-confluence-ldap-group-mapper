@@ -40,7 +40,6 @@ public class ConfluenceContentProviderIT {
         when(model.get(BASE_URL)).thenReturn(mockEndpoint.toString());
         when(model.get(AUTH_TOKEN)).thenReturn("token");
         when(model.get(PARENT_PAGE_ID)).thenReturn("1234");
-        when(model.get(PAGE_NESTING, DEFAULT_PAGE_NESTING)).thenReturn(4);
         when(model.get(SPACE_KEY)).thenReturn("TEST");
         when(model.get(PAGE_LABELS)).thenReturn("label1 , label2 , lbl-test");
         when(model.get(PAGE_PROPERTY_NAME)).thenReturn("Members");
