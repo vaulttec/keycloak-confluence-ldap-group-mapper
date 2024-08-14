@@ -51,7 +51,7 @@ public class ConfluenceContentProvider {
                 throw new IOException(response.asJson().toString());
             }
         } catch (IOException e) {
-            LOG.errorf(e, "Retrieving child pages from %s failed: %s", config.getBaseUrl(), e.getMessage());
+            LOG.errorf(e, "Retrieving child pages of %s from %s failed: %s", pageId, config.getBaseUrl(), e.getMessage());
         }
         return Collections.emptyList();
     }
